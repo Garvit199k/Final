@@ -1,7 +1,7 @@
 // Global variables
 let currentUser = null;
 let selectedGender = null;
-const API_URL = 'https://final-sage-three.vercel.app';  // Your Vercel deployment URL
+const API_URL = 'https://final-garvit199k.vercel.app';  // Updated to your actual Vercel URL
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
