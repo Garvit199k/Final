@@ -9,16 +9,12 @@ function showLanding() {
 }
 
 function showLoginForm() {
-    document.getElementById('landing-section').classList.add('hidden');
-    document.getElementById('auth-section').classList.remove('hidden');
     document.getElementById('login-form').classList.remove('hidden');
     document.getElementById('register-form').classList.add('hidden');
     document.getElementById('auth-title').textContent = 'Login';
 }
 
 function showRegisterForm() {
-    document.getElementById('landing-section').classList.add('hidden');
-    document.getElementById('auth-section').classList.remove('hidden');
     document.getElementById('login-form').classList.add('hidden');
     document.getElementById('register-form').classList.remove('hidden');
     document.getElementById('auth-title').textContent = 'Register';
@@ -30,6 +26,7 @@ function showTypingTest() {
     document.getElementById('typing-test').classList.remove('hidden');
     currentSection = 'typing-test';
     updateActiveNavButton('typing-test');
+    initTypingTest();
 }
 
 // Show dog rescue section
@@ -38,7 +35,6 @@ function showDogRescue() {
     document.getElementById('dog-rescue').classList.remove('hidden');
     currentSection = 'dog-rescue';
     updateActiveNavButton('dog-rescue');
-    // Initialize dog game when showing the section
     initGame();
 }
 
@@ -48,7 +44,6 @@ function showLeaderboard() {
     document.getElementById('leaderboard').classList.remove('hidden');
     currentSection = 'leaderboard';
     updateActiveNavButton('leaderboard');
-    // Load leaderboard data
     showLeaderboardData('typing');
 }
 
@@ -88,4 +83,34 @@ function applyTheme(gender) {
 // Preview theme without applying it permanently
 function previewTheme(gender) {
     document.body.className = `theme-${gender}`;
-} 
+}
+
+// Initialize UI
+document.addEventListener('DOMContentLoaded', () => {
+    // Add click handlers for navigation
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const section = btn.dataset.section;
+            switch (section) {
+                case 'typing-test':
+                    showTypingTest();
+                    break;
+                case 'dog-rescue':
+                    showDogRescue();
+                    break;
+                case 'leaderboard':
+                    showLeaderboard();
+                    break;
+                case 'about':
+                    showAbout();
+                    break;
+            }
+        });
+    });
+
+    // Apply stored theme if available
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+        applyTheme(storedTheme);
+    }
+}); 

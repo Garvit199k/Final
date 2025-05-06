@@ -204,45 +204,12 @@ app.get('*', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: 'Something went wrong!' });
-});
-
-// Handle 404
-app.use((req, res) => {
-    res.status(404).json({ error: 'Not found' });
+    console.error('Error:', err);
+    res.status(500).json({ error: 'Internal server error' });
 });
 
 // Start server
 const PORT = process.env.PORT || 3000;
-let currentPort = PORT;
-
-function startServer(port) {
-    const server = app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-    }).on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-            console.log(`Port ${port} is busy, trying ${port + 1}`);
-            startServer(port + 1);
-        } else {
-            console.error('Server error:', err);
-        }
-    });
-
-    // Handle graceful shutdown
-    process.on('SIGTERM', () => {
-        server.close(() => {
-            console.log('Server terminated');
-            process.exit(0);
-        });
-    });
-
-    process.on('SIGINT', () => {
-        server.close(() => {
-            console.log('Server terminated');
-            process.exit(0);
-        });
-    });
-}
-
-startServer(currentPort); 
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+}); 
