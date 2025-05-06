@@ -6,7 +6,7 @@
             "use": "@vercel/node"
         },
         {
-            "src": "public/**/*",
+            "src": "public/**",
             "use": "@vercel/static"
         }
     ],
@@ -16,16 +16,11 @@
             "dest": "server.js"
         },
         {
-            "src": "/css/(.*)",
-            "dest": "/public/css/$1"
-        },
-        {
-            "src": "/js/(.*)",
-            "dest": "/public/js/$1"
-        },
-        {
             "src": "/(.*)",
-            "dest": "/public/index.html"
+            "dest": "public/$1"
         }
-    ]
+    ],
+    "env": {
+        "NODE_ENV": "production"
+    }
 } 

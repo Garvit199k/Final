@@ -9,15 +9,22 @@ const app = express();
 
 // CORS configuration
 app.use(cors({
-    origin: '*',
+    origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:3000', 'http://127.0.0.1:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-    credentials: true
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+    credentials: true,
+    optionsSuccessStatus: 200
 }));
 
 // Middleware
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        }
+    }
+}));
 
 // Debug middleware
 app.use((req, res, next) => {
@@ -182,12 +189,29 @@ app.get('/api/leaderboard/:type', (req, res) => {
     }
 });
 
-// Serve static files
+// Serve static files for any route not matching API routes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+});
+
+const startServer = (port) => {
+    const server = app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    }).on('error', (error) => {
+        if (error.code === 'EADDRINUSE') {
+            console.log(`Port ${port} is busy, trying ${port + 1}`);
+            startServer(port + 1);
+        } else {
+            console.error('Server error:', error);
+        }
+    });
+};
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-}); 
+startServer(PORT); 
