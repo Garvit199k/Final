@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeRescue - Typing Test & Dog Rescue Game</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="theme-neutral">
+    <div id="app">
+        <!-- Landing Section -->
+        <div id="landing-section" class="section">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="logo">
+                        <i class="fas fa-keyboard"></i>
+                        <h1>TypeRescue</h1>
+                    </div>
+                    <p class="hero-subtitle">Master typing while saving virtual dogs!</p>
+                    <div class="auth-buttons">
+                        <button onclick="showLoginForm()" class="btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        <button onclick="showRegisterForm()" class="btn-secondary">
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
+                    </div>
+                    <div class="theme-preview">
+                        <p>Choose Your Theme:</p>
+                        <div class="theme-buttons">
+                            <button onclick="previewTheme('male')" class="theme-btn male-theme">
+                                <i class="fas fa-mars"></i> Male Theme
+                            </button>
+                            <button onclick="previewTheme('female')" class="theme-btn female-theme">
+                                <i class="fas fa-venus"></i> Female Theme
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Section -->
+        <div id="auth-section" class="section hidden">
+            <div class="container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <button onclick="showLanding()" class="back-btn">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2 id="auth-title">Login</h2>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <div id="login-form" class="auth-form">
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="login-username" placeholder="Username">
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="Password">
+                        </div>
+                        <button id="login-btn" class="btn-primary full-width">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        <p class="switch-form">
+                            Don't have an account? 
+                            <a href="#" onclick="showRegisterForm()">Register</a>
+                        </p>
+                        <div class="error-message"></div>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="register-form" class="auth-form hidden">
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="register-username" placeholder="Username">
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="register-password" placeholder="Password">
+                        </div>
+                        <div class="gender-selection">
+                            <button onclick="selectGender('male')" class="gender-btn" id="male-btn">
+                                <i class="fas fa-mars"></i> Male
+                            </button>
+                            <button onclick="selectGender('female')" class="gender-btn" id="female-btn">
+                                <i class="fas fa-venus"></i> Female
+                            </button>
+                        </div>
+                        <button id="register-btn" class="btn-primary full-width">
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
+                        <p class="switch-form">
+                            Already have an account? 
+                            <a href="#" onclick="showLoginForm()">Login</a>
+                        </p>
+                        <div class="error-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Game Section -->
+        <div id="game-section" class="section hidden">
+            <nav class="game-nav">
+                <div class="nav-brand">
+                    <i class="fas fa-keyboard"></i>
+                    <span>TypeRescue</span>
+                </div>
+                <div class="nav-links">
+                    <button onclick="showTypingTest()" class="nav-btn">
+                        <i class="fas fa-keyboard"></i> Typing Test
+                    </button>
+                    <button onclick="showDogRescue()" class="nav-btn">
+                        <i class="fas fa-dog"></i> Dog Rescue
+                    </button>
+                    <button onclick="showLeaderboard()" class="nav-btn">
+                        <i class="fas fa-trophy"></i> Leaderboard
+                    </button>
+                    <button onclick="showAbout()" class="nav-btn">
+                        <i class="fas fa-info-circle"></i> About
+                    </button>
+                </div>
+                <div class="user-info">
+                    <span id="username-display"></span>
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Game Containers -->
+            <div class="game-containers">
+                <!-- Typing Test -->
+                <div id="typing-test" class="game-container">
+                    <div class="game-header">
+                        <h2><i class="fas fa-keyboard"></i> Typing Test</h2>
+                        <div class="controls">
+                            <select id="time-select" class="time-select">
+                                <option value="30">30 seconds</option>
+                                <option value="60">1 minute</option>
+                                <option value="120">2 minutes</option>
+                            </select>
+                            <button onclick="startTypingTest()" class="start-btn">
+                                <i class="fas fa-play"></i> Start Test
+                            </button>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span id="time">Time: 0s</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span id="wpm">WPM: 0</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-bullseye"></i>
+                            <span id="accuracy">Accuracy: 0%</span>
+                        </div>
+                    </div>
+                    <div id="text-display" class="text-display"></div>
+                    <textarea id="typing-input" placeholder="Start typing when the test begins..." disabled></textarea>
+                </div>
+
+                <!-- Dog Rescue Game -->
+                <div id="dog-rescue" class="game-container hidden">
+                    <div class="game-header">
+                        <h2><i class="fas fa-dog"></i> Dog Rescue Game</h2>
+                        <button onclick="startDogRescue()" class="start-btn">
+                            <i class="fas fa-play"></i> Start Game
+                        </button>
+                    </div>
+                    <div class="game-canvas-container">
+                        <canvas id="game-canvas"></canvas>
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span id="score">Score: 0</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-paw"></i>
+                            <span id="dogs-rescued">Dogs Rescued: 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div id="leaderboard" class="game-container hidden">
+                    <div class="game-header">
+                        <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
+                        <div class="leaderboard-controls">
+                            <button onclick="showLeaderboardData('typing')" class="tab-btn active">
+                                <i class="fas fa-keyboard"></i> Typing Test
+                            </button>
+                            <button onclick="showLeaderboardData('dogRescue')" class="tab-btn">
+                                <i class="fas fa-dog"></i> Dog Rescue
+                            </button>
+                        </div>
+                    </div>
+                    <div class="leaderboard-content">
+                        <table id="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Player</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboard-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- About Section -->
+                <div id="about" class="game-container hidden">
+                    <div class="about-content">
+                        <h2><i class="fas fa-info-circle"></i> About TypeRescue</h2>
+                        <p class="about-description">
+                            TypeRescue is an innovative web application that combines typing practice with an engaging dog rescue game.
+                            Our platform helps users improve their typing skills while enjoying a fun and meaningful gaming experience.
+                        </p>
+
+                        <div class="features-section">
+                            <h3><i class="fas fa-star"></i> Key Features</h3>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Customizable typing tests</li>
+                                <li><i class="fas fa-check"></i> Engaging dog rescue game</li>
+                                <li><i class="fas fa-check"></i> Real-time WPM tracking</li>
+                                <li><i class="fas fa-check"></i> Gender-based themes</li>
+                                <li><i class="fas fa-check"></i> Global leaderboards</li>
+                            </ul>
+                        </div>
+
+                        <div class="developers-section">
+                            <h3><i class="fas fa-code"></i> Meet the Developers</h3>
+                            <div class="developer-cards">
+                                <div class="developer-card">
+                                    <img src="https://ui-avatars.com/api/?name=Garvit&background=random" alt="Garvit">
+                                    <h4>Garvit</h4>
+                                    <p>BCA 6th Semester</p>
+                                    <p>SSJU Almora</p>
+                                    <div class="social-links">
+                                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                                    </div>
+                                </div>
+                                <div class="developer-card">
+                                    <img src="https://ui-avatars.com/api/?name=Karan&background=random" alt="Karan">
+                                    <h4>Karan</h4>
+                                    <p>BCA 6th Semester</p>
+                                    <p>SSJU Almora</p>
+                                    <div class="social-links">
+                                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="college-section">
+                            <h3><i class="fas fa-university"></i> Our Institution</h3>
+                            <p>
+                                We are proud students of Soban Singh Jeena University (SSJU), Almora. 
+                                This project was developed as part of our BCA final semester curriculum, 
+                                showcasing our skills in web development and programming.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/typing.js"></script>
+    <script src="js/dogRescue.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/themes.js"></script>
+    <script src="js/about.js"></script>
+</body>
+</html> 
