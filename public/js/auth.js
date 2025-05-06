@@ -1,7 +1,7 @@
 // Global variables
 let currentUser = null;
 let selectedGender = null;
-const API_URL = 'https://final-garvit199k.vercel.app';  // Updated to your actual Vercel URL
+const API_URL = window.location.origin;  // This will automatically use the correct URL whether local or on Vercel
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
