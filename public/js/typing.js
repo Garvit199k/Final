@@ -20,7 +20,9 @@ const sampleTexts = [
 function initTypingTest() {
     const textDisplay = document.getElementById('text-display');
     const randomText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
-    textDisplay.textContent = randomText;
+    textDisplay.innerHTML = randomText.split('').map(char => 
+        `<span class="char">${char}</span>`
+    ).join('');
     document.getElementById('typing-input').value = '';
     document.getElementById('typing-input').disabled = true;
     resetStats();
@@ -113,6 +115,17 @@ async function endTest() {
         if (!response.ok) {
             throw new Error('Failed to save score');
         }
+
+        // Show completion message
+        const message = document.createElement('div');
+        message.className = 'completion-message';
+        message.innerHTML = `
+            <h3>Test Complete!</h3>
+            <p>WPM: ${stats.wpm}</p>
+            <p>Accuracy: ${stats.accuracy}%</p>
+            <button onclick="startTypingTest()" class="btn-primary">Try Again</button>
+        `;
+        document.querySelector('.game-container').appendChild(message);
     } catch (error) {
         console.error('Error saving score:', error);
     }
@@ -125,14 +138,22 @@ document.getElementById('typing-input').addEventListener('input', (e) => {
     const typingInput = e.target;
     const textDisplay = document.getElementById('text-display');
     const targetText = textDisplay.textContent;
+    const chars = textDisplay.getElementsByClassName('char');
 
     totalCharacters = typingInput.value.length;
     correctCharacters = 0;
 
-    // Compare input with target text
-    for (let i = 0; i < totalCharacters; i++) {
-        if (typingInput.value[i] === targetText[i]) {
-            correctCharacters++;
+    // Compare input with target text and update character styling
+    for (let i = 0; i < chars.length; i++) {
+        if (i < typingInput.value.length) {
+            if (typingInput.value[i] === targetText[i]) {
+                chars[i].className = 'char correct';
+                correctCharacters++;
+            } else {
+                chars[i].className = 'char incorrect';
+            }
+        } else {
+            chars[i].className = 'char';
         }
     }
 

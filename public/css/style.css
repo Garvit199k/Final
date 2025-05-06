@@ -262,40 +262,72 @@ body {
 
 /* Game Section */
 .game-nav {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     padding: 15px 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
 }
 
 .nav-brand {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-decoration: none;
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.2em;
-    color: var(--dark-color);
 }
 
 .nav-links {
     display: flex;
-    gap: 15px;
+    gap: 20px;
+    align-items: center;
 }
 
 .nav-btn {
-    background: none;
+    padding: 10px 20px;
     border: none;
-    color: #666;
+    border-radius: 8px;
+    font-size: 1em;
     cursor: pointer;
-    padding: 8px 15px;
-    border-radius: 6px;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: var(--dark-color);
+    position: relative;
+    overflow: hidden;
 }
 
-.nav-btn:hover {
-    background: #f5f5f5;
+.nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.nav-btn:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.nav-btn.active {
     color: var(--primary-color);
+    font-weight: 600;
+}
+
+.nav-btn.active::after {
+    transform: scaleX(1);
 }
 
 .user-info {
@@ -404,25 +436,48 @@ body {
 }
 
 /* About Section */
-.about-content {
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.about-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    margin: 30px auto;
+    max-width: 800px;
 }
 
-.about-content h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
+.about-section h2 {
     color: var(--primary-color);
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
-.about-description {
-    font-size: 1.1rem;
+.about-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.about-card {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+}
+
+.about-card h3 {
+    color: var(--dark-color);
+    margin-bottom: 15px;
+}
+
+.about-card p {
+    color: #666;
     line-height: 1.6;
-    margin-bottom: 2rem;
-    text-align: center;
 }
 
 .features-section {
@@ -519,46 +574,141 @@ body {
 
 /* Typing Test */
 .text-display {
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: 10px;
-    margin: 1rem 0;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     line-height: 1.6;
-    min-height: 200px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    color: #666;
 }
 
 #typing-input {
     width: 100%;
-    height: 150px;
-    padding: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    resize: none;
-    font-size: 1.1rem;
-    background: var(--input-bg);
-    color: var(--text-color);
+    padding: 15px;
+    font-size: 1.1em;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
 }
 
-.stats {
-    display: flex;
-    gap: 2rem;
-    margin: 1rem 0;
-    font-size: 1.1rem;
+#typing-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Typing Test Specific */
+.char {
+    display: inline-block;
+    padding: 0 1px;
+    transition: all 0.1s ease;
+}
+
+.char.correct {
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.char.incorrect {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+    text-decoration: underline;
+}
+
+.completion-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.completion-message h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.completion-message p {
+    margin: 10px 0;
+    color: #666;
 }
 
 /* Dog Rescue Game */
 .game-canvas-container {
-    background: var(--card-bg);
-    border-radius: 10px;
+    position: relative;
+    background: linear-gradient(180deg, #e0f7fa 0%, #b2ebf2 100%);
+    border-radius: 15px;
     overflow: hidden;
-    margin: 1rem 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 #game-canvas {
-    width: 100%;
-    height: 500px;
     display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Game Stats */
+.game-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.stat-item {
+    text-align: center;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Dog Rescue Game Specific */
+.word-input {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 300px;
+    padding: 12px 20px;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    font-size: 1em;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.word-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+    background: white;
 }
 
 /* Leaderboard */

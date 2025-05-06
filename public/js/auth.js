@@ -1,7 +1,7 @@
 // Global variables
 let currentUser = null;
 let selectedGender = null;
-const API_URL = 'https://final-badzxgm5u-garvits-projects-5a47218e.vercel.app';  // Updated Vercel production URL
+const API_URL = '';  // Empty string for same-origin requests in production
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
