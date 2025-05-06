@@ -158,7 +158,18 @@ async function login() {
         const data = await response.json();
 
         if (response.ok) {
-            handleLoginSuccess(data);
+            // Store auth data
+            currentUser = {
+                token: data.token,
+                gender: data.gender,
+                username: username
+            };
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('gender', data.gender);
+            localStorage.setItem('username', username);
+
+            // Show game section
+            showGameSection();
         } else {
             throw new Error(data.error || 'Invalid credentials');
         }
@@ -170,42 +181,20 @@ async function login() {
     }
 }
 
-// Handle successful login
-function handleLoginSuccess(data) {
-    currentUser = {
-        token: data.token,
-        gender: data.gender
-    };
-
-    // Store auth data
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('gender', data.gender);
-
-    // Hide all sections first
+// Show game section
+function showGameSection() {
     document.getElementById('landing-section').classList.add('hidden');
     document.getElementById('auth-section').classList.add('hidden');
+    document.getElementById('game-section').classList.remove('hidden');
     
-    // Show game section
-    const gameSection = document.getElementById('game-section');
-    gameSection.classList.remove('hidden');
+    // Apply theme based on user's gender
+    applyTheme(currentUser.gender);
     
     // Show typing test by default
-    document.querySelectorAll('.game-container').forEach(container => {
-        container.classList.add('hidden');
-    });
-    document.getElementById('typing-test').classList.remove('hidden');
-
+    showTypingTest();
+    
     // Update username display
-    document.getElementById('username-display').textContent = `Welcome back!`;
-
-    // Apply theme
-    document.body.className = `theme-${data.gender}`;
-
-    // Reset forms
-    document.getElementById('login-username').value = '';
-    document.getElementById('login-password').value = '';
-
-    console.log('Login successful, game section shown'); // Debug log
+    document.getElementById('username-display').textContent = 'Welcome back!';
 }
 
 // Logout

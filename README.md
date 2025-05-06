@@ -1,81 +1,127 @@
-# Typing Test & Dog Rescue Game
+# TypeRescue - Typing Test & Dog Rescue Game
 
-A full-stack web application featuring a typing test and an engaging dog rescue game. The platform includes user authentication, gender-based themes, leaderboards, and customizable time limits.
+A web application that combines typing practice with an engaging dog rescue game. Built with Node.js, Express, and vanilla JavaScript.
 
 ## Features
 
-- User Registration and Login
-- Typing Test with multiple time limits (30s, 60s, 2min)
-- Dog Rescue Game
-- Gender-based Themes (Male/Female)
-- Global Leaderboards
-- Real-time WPM and Accuracy tracking
-- Responsive Design
+- **Typing Test Game**
+  - Real-time character highlighting
+  - WPM and accuracy tracking
+  - Multiple time duration options
+  - Instant feedback on typing performance
 
-## Tech Stack
+- **Dog Rescue Game**
+  - Word-based gameplay
+  - Score tracking
+  - Progressive difficulty
+  - Engaging animations
 
-- Frontend: HTML, CSS, JavaScript
-- Backend: Node.js, Express.js
-- Database: MongoDB
-- Authentication: JWT
-- Deployment: Vercel
+- **User System**
+  - User registration and login
+  - Gender-based themes
+  - Score history tracking
+  - Global leaderboards
 
-## Setup Instructions
+## Prerequisites
 
-1. Clone the repository
+- Node.js >= 18.0.0
+- npm (comes with Node.js)
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd typing-test-game
+   ```
+
 2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. Create a `.env` file in the root directory with the following variables:
+3. Create a `.env` file in the root directory:
    ```
-   MONGODB_URI=mongodb://localhost:27017/typing-game
-   JWT_SECRET=your-secret-key-here
    PORT=3000
+   JWT_SECRET=your-secret-key-here
+   NODE_ENV=development
    ```
-   Replace `your-secret-key-here` with a secure random string.
 
-4. Make sure MongoDB is running on your system
+## Running the Application
 
-5. Run the development server:
+### Development Mode
+
+1. Start the server with hot reloading:
    ```bash
    npm run dev
    ```
 
-6. Open `http://localhost:3000` in your browser
+2. In a separate terminal, start the client:
+   ```bash
+   npm run preview
+   ```
+
+3. Visit `http://localhost:8080` in your browser
+
+### Production Mode
+
+1. Start the server:
+   ```bash
+   npm start
+   ```
+
+2. Visit `http://localhost:3000` in your browser
 
 ## Deployment
 
-To deploy on Vercel:
+The application is configured for deployment on Vercel:
 
-1. Create a Vercel account if you haven't already
-2. Install Vercel CLI:
+1. Install Vercel CLI:
    ```bash
-   npm install -g vercel
+   npm i -g vercel
    ```
-3. Configure your environment variables in Vercel dashboard
-4. Deploy:
+
+2. Deploy:
    ```bash
    vercel
    ```
 
-## Game Instructions
+## Project Structure
 
-### Typing Test
-- Select your preferred time limit
-- Click "Start Test" to begin
-- Type the displayed text as accurately and quickly as possible
-- Your WPM and accuracy will be calculated in real-time
-- Scores are automatically saved when the test ends
+```
+typing-test-game/
+├── public/
+│   ├── css/
+│   │   ├── style.css
+│   │   └── themes.css
+│   ├── js/
+│   │   ├── auth.js
+│   │   ├── typing.js
+│   │   ├── dogRescue.js
+│   │   ├── leaderboard.js
+│   │   └── ui.js
+│   └── index.html
+├── server.js
+├── package.json
+├── vercel.json
+└── README.md
+```
 
-### Dog Rescue Game
-- Use left and right arrow keys to move your character
-- Catch falling dogs to rescue them
-- Avoid obstacles (red blocks)
-- Game ends if you hit an obstacle
-- Your score is based on the number of dogs rescued
+## API Endpoints
+
+- `POST /api/register` - Register a new user
+- `POST /api/login` - User login
+- `POST /api/scores` - Save game scores (protected)
+- `GET /api/leaderboard/:type` - Get leaderboard data
 
 ## Contributing
 
-Feel free to submit issues and enhancement requests! 
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details. 

@@ -59,6 +59,13 @@ function initGame() {
     createWordInput();
 }
 
+// Add resize canvas function
+function resizeCanvas() {
+    const container = canvas.parentElement;
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+}
+
 // Create word input
 function createWordInput() {
     const container = document.querySelector('.game-canvas-container');

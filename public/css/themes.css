@@ -1,155 +1,218 @@
 /* Theme Variables */
+:root {
+    --transition-speed: 0.3s;
+}
+
 .theme-neutral {
     --bg-color: #f5f7fa;
     --text-color: #2c3e50;
     --primary-color: #4a90e2;
     --secondary-color: #f64c72;
+    --accent-color: #34495e;
     --card-bg: #ffffff;
-    --nav-bg: #ffffff;
+    --nav-bg: rgba(255, 255, 255, 0.95);
     --border-color: #e1e8ed;
     --input-bg: #ffffff;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
 .theme-male {
-    --bg-color: #e8f4ff;
+    --bg-color: #f0f7ff;
     --text-color: #2c3e50;
-    --primary-color: #4a90e2;
+    --primary-color: #2196f3;
     --secondary-color: #34495e;
+    --accent-color: #1976d2;
     --card-bg: #ffffff;
-    --nav-bg: #ffffff;
-    --border-color: #bcd9f7;
+    --nav-bg: rgba(255, 255, 255, 0.95);
+    --border-color: #bbdefb;
     --input-bg: #f8fafc;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --shadow-sm: 0 2px 4px rgba(33, 150, 243, 0.1);
+    --shadow-md: 0 4px 6px rgba(33, 150, 243, 0.15);
+    --shadow-lg: 0 10px 15px rgba(33, 150, 243, 0.2);
 }
 
 .theme-female {
-    --bg-color: #fff0f3;
+    --bg-color: #fff0f6;
     --text-color: #2c3e50;
-    --primary-color: #f64c72;
+    --primary-color: #e91e63;
     --secondary-color: #553d67;
+    --accent-color: #c2185b;
     --card-bg: #ffffff;
-    --nav-bg: #ffffff;
-    --border-color: #ffd3dc;
-    --input-bg: #fcf8f9;
+    --nav-bg: rgba(255, 255, 255, 0.95);
+    --border-color: #f8bbd0;
+    --input-bg: #fff5f8;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --shadow-sm: 0 2px 4px rgba(233, 30, 99, 0.1);
+    --shadow-md: 0 4px 6px rgba(233, 30, 99, 0.15);
+    --shadow-lg: 0 10px 15px rgba(233, 30, 99, 0.2);
 }
 
 /* Apply Theme Colors */
 body {
     background: var(--bg-color);
     color: var(--text-color);
-    transition: all 0.3s ease;
+    transition: background-color var(--transition-speed) ease;
 }
 
-.auth-card, .game-nav, .game-container {
+.game-nav {
+    background: var(--nav-bg);
+    border-bottom: 2px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.game-container {
     background: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-lg);
 }
 
-input, textarea {
+.text-display {
     background: var(--input-bg);
     border-color: var(--border-color);
     color: var(--text-color);
 }
 
+input, textarea, select {
+    background: var(--input-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+    transition: all var(--transition-speed) ease;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+}
+
 /* Theme-specific Button Styles */
 .theme-male .btn-primary {
-    background: linear-gradient(135deg, #4a90e2, #357abd);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
 }
 
 .theme-male .btn-secondary {
-    border-color: #4a90e2;
-    color: #4a90e2;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 .theme-female .btn-primary {
-    background: linear-gradient(135deg, #f64c72, #c43758);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
 }
 
 .theme-female .btn-secondary {
-    border-color: #f64c72;
-    color: #f64c72;
-}
-
-/* Theme Preview Buttons */
-.theme-btn.male-theme {
-    background: linear-gradient(135deg, #4a90e2, #357abd);
-    color: white;
-    border: none;
-}
-
-.theme-btn.female-theme {
-    background: linear-gradient(135deg, #f64c72, #c43758);
-    color: white;
-    border: none;
-}
-
-.theme-btn.active {
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5), 
-                0 0 0 6px var(--primary-color);
-}
-
-/* Theme-specific Text */
-.theme-male {
-    --heading-color: #2c3e50;
-    --text-primary: #34495e;
-    --text-secondary: #7f8c8d;
-}
-
-.theme-female {
-    --heading-color: #2c3e50;
-    --text-primary: #553d67;
-    --text-secondary: #6c567b;
-}
-
-/* Theme Transitions */
-.theme-btn, body, input, button {
-    transition: all 0.3s ease;
-}
-
-/* Theme-specific Input Focus Styles */
-.theme-male input:focus,
-.theme-male textarea:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-.theme-female input:focus,
-.theme-female textarea:focus {
-    border-color: #ec4899;
-    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 /* Theme-specific Game Elements */
 .theme-male .text-display {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
     border-left: 4px solid var(--primary-color);
 }
 
 .theme-female .text-display {
-    border: 2px solid var(--primary-color);
-    border-radius: 15px;
+    background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+    border-left: 4px solid var(--primary-color);
 }
 
-/* Theme-specific Animations */
-@keyframes male-gradient {
+.theme-male .char.correct {
+    color: var(--success-color);
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.theme-female .char.correct {
+    color: var(--success-color);
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.theme-male .char.incorrect {
+    color: var(--error-color);
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.theme-female .char.incorrect {
+    color: var(--error-color);
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.theme-male .char.current {
+    background: rgba(33, 150, 243, 0.2);
+}
+
+.theme-female .char.current {
+    background: rgba(233, 30, 99, 0.2);
+}
+
+/* Stats and UI Elements */
+.stat-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-value {
+    color: var(--primary-color);
+}
+
+.completion-message {
+    background: var(--card-bg);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Navigation Elements */
+.nav-btn {
+    color: var(--text-color);
+}
+
+.nav-btn:hover, .nav-btn.active {
+    color: var(--primary-color);
+}
+
+.nav-btn::after {
+    background: var(--primary-color);
+}
+
+/* Animations */
+@keyframes gradient {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
-@keyframes female-gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+.theme-male .game-container {
+    background: linear-gradient(135deg, #ffffff, #f0f7ff);
+    background-size: 200% 200%;
+    animation: gradient 15s ease infinite;
 }
 
-.theme-male .game-nav {
-    background: linear-gradient(270deg, #0f172a, #1e293b);
+.theme-female .game-container {
+    background: linear-gradient(135deg, #ffffff, #fff0f6);
     background-size: 200% 200%;
-    animation: male-gradient 15s ease infinite;
+    animation: gradient 15s ease infinite;
 }
 
-.theme-female .game-nav {
-    background: linear-gradient(270deg, #fbcfe8, #f9a8d4);
-    background-size: 200% 200%;
-    animation: female-gradient 15s ease infinite;
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .game-container {
+        margin: 10px;
+        padding: 15px;
+    }
+    
+    .text-display {
+        font-size: 1em;
+        padding: 15px;
+    }
+    
+    .stat-box {
+        padding: 10px;
+    }
 } 
