@@ -25,11 +25,10 @@
     <!-- Auth Section -->
     <section id="auth-section" class="section hidden">
         <div class="auth-card">
+            <h2 id="auth-title">Login</h2>
+            
             <!-- Login Form -->
-            <form id="login-form" class="hidden">
-                <div class="auth-header">
-                    <h2>Login</h2>
-                </div>
+            <form id="login-form">
                 <div class="input-group">
                     <i class="fas fa-user"></i>
                     <input type="text" id="login-username" placeholder="Username" required>
@@ -46,9 +45,6 @@
 
             <!-- Register Form -->
             <form id="register-form" class="hidden">
-                <div class="auth-header">
-                    <h2>Register</h2>
-                </div>
                 <div class="input-group">
                     <i class="fas fa-user"></i>
                     <input type="text" id="register-username" placeholder="Username" required>
@@ -58,12 +54,15 @@
                     <input type="password" id="register-password" placeholder="Password" required>
                 </div>
                 <div class="gender-selection">
-                    <button type="button" class="gender-btn" data-gender="male">
-                        <i class="fas fa-mars"></i> Male
-                    </button>
-                    <button type="button" class="gender-btn" data-gender="female">
-                        <i class="fas fa-venus"></i> Female
-                    </button>
+                    <h3>Select Theme</h3>
+                    <div class="gender-buttons">
+                        <button type="button" class="gender-btn" data-gender="male">
+                            <i class="fas fa-mars"></i> Male
+                        </button>
+                        <button type="button" class="gender-btn" data-gender="female">
+                            <i class="fas fa-venus"></i> Female
+                        </button>
+                    </div>
                 </div>
                 <button type="submit" id="register-btn" class="btn-primary full-width">Register</button>
                 <p class="form-footer">

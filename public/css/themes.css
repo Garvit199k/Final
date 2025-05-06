@@ -1,14 +1,31 @@
 /* Theme Variables */
 :root {
     --transition-speed: 0.3s;
+    --male-primary: #2196F3;
+    --male-secondary: #1976D2;
+    --male-accent: #64B5F6;
+    --male-text: #0D47A1;
+    --male-bg: #E3F2FD;
+    
+    --female-primary: #E91E63;
+    --female-secondary: #C2185B;
+    --female-accent: #F48FB1;
+    --female-text: #880E4F;
+    --female-bg: #FCE4EC;
+    
+    --neutral-primary: #607D8B;
+    --neutral-secondary: #455A64;
+    --neutral-accent: #90A4AE;
+    --neutral-text: #263238;
+    --neutral-bg: #ECEFF1;
 }
 
 .theme-neutral {
-    --bg-color: #f5f7fa;
-    --text-color: #2c3e50;
-    --primary-color: #4a90e2;
-    --secondary-color: #f64c72;
-    --accent-color: #34495e;
+    --bg-color: var(--neutral-bg);
+    --text-color: var(--neutral-text);
+    --primary-color: var(--neutral-primary);
+    --secondary-color: var(--neutral-secondary);
+    --accent-color: var(--neutral-accent);
     --card-bg: #ffffff;
     --nav-bg: rgba(255, 255, 255, 0.95);
     --border-color: #e1e8ed;
@@ -18,40 +35,46 @@
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 .theme-male {
-    --bg-color: #f0f7ff;
-    --text-color: #2c3e50;
-    --primary-color: #2196f3;
-    --secondary-color: #34495e;
-    --accent-color: #1976d2;
+    --bg-color: var(--male-bg);
+    --text-color: var(--male-text);
+    --primary-color: var(--male-primary);
+    --secondary-color: var(--male-secondary);
+    --accent-color: var(--male-accent);
     --card-bg: #ffffff;
     --nav-bg: rgba(255, 255, 255, 0.95);
-    --border-color: #bbdefb;
+    --border-color: var(--male-primary);
     --input-bg: #f8fafc;
     --success-color: #2ecc71;
     --error-color: #e74c3c;
     --shadow-sm: 0 2px 4px rgba(33, 150, 243, 0.1);
     --shadow-md: 0 4px 6px rgba(33, 150, 243, 0.15);
     --shadow-lg: 0 10px 15px rgba(33, 150, 243, 0.2);
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 .theme-female {
-    --bg-color: #fff0f6;
-    --text-color: #2c3e50;
-    --primary-color: #e91e63;
-    --secondary-color: #553d67;
-    --accent-color: #c2185b;
+    --bg-color: var(--female-bg);
+    --text-color: var(--female-text);
+    --primary-color: var(--female-primary);
+    --secondary-color: var(--female-secondary);
+    --accent-color: var(--female-accent);
     --card-bg: #ffffff;
     --nav-bg: rgba(255, 255, 255, 0.95);
-    --border-color: #f8bbd0;
+    --border-color: var(--female-primary);
     --input-bg: #fff5f8;
     --success-color: #2ecc71;
     --error-color: #e74c3c;
     --shadow-sm: 0 2px 4px rgba(233, 30, 99, 0.1);
     --shadow-md: 0 4px 6px rgba(233, 30, 99, 0.15);
     --shadow-lg: 0 10px 15px rgba(233, 30, 99, 0.2);
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 /* Apply Theme Colors */
@@ -192,12 +215,18 @@ input:focus, textarea:focus, select:focus {
     background: linear-gradient(135deg, #ffffff, #f0f7ff);
     background-size: 200% 200%;
     animation: gradient 15s ease infinite;
+    border-color: var(--male-primary);
 }
 
 .theme-female .game-container {
     background: linear-gradient(135deg, #ffffff, #fff0f6);
     background-size: 200% 200%;
     animation: gradient 15s ease infinite;
+    border-color: var(--female-primary);
+}
+
+.theme-neutral .game-container {
+    border-color: var(--neutral-primary);
 }
 
 /* Responsive Adjustments */
@@ -215,4 +244,35 @@ input:focus, textarea:focus, select:focus {
     .stat-box {
         padding: 10px;
     }
+}
+
+/* Theme Application */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+.nav-btn.active {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+.gender-btn {
+    background-color: var(--neutral-accent);
+    color: var(--neutral-text);
+    transition: all 0.3s ease;
+}
+
+.gender-btn.selected {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.gender-btn:hover {
+    background-color: var(--secondary-color);
+    color: white;
 } 

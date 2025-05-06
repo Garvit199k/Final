@@ -5,9 +5,39 @@ const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:300
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Add click handlers for auth buttons
-    document.getElementById('register-btn')?.addEventListener('click', register);
-    document.getElementById('login-btn')?.addEventListener('click', login);
+    // Add form submit handlers
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        login();
+    });
+    
+    document.getElementById('register-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        register();
+    });
+    
+    // Add gender selection handlers
+    document.querySelectorAll('.gender-btn').forEach(btn => {
+        btn.addEventListener('click', () => selectGender(btn.dataset.gender));
+    });
+    
+    // Add form switch handlers
+    document.getElementById('show-register').addEventListener('click', (e) => {
+        e.preventDefault();
+        showRegisterForm();
+    });
+    
+    document.getElementById('show-login').addEventListener('click', (e) => {
+        e.preventDefault();
+        showLoginForm();
+    });
+    
+    // Add get started handler
+    document.getElementById('get-started').addEventListener('click', () => {
+        document.getElementById('landing-section').classList.add('hidden');
+        document.getElementById('auth-section').classList.remove('hidden');
+        showLoginForm();
+    });
     
     // Check if user is already logged in
     const token = localStorage.getItem('token');
@@ -20,31 +50,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Helper function to show error message
-function showError(formId, message) {
-    const errorDiv = document.querySelector(`#${formId} .error-message`);
-    if (!errorDiv) {
-        const div = document.createElement('div');
-        div.className = 'error-message';
-        document.getElementById(formId).appendChild(div);
-    }
-    errorDiv.textContent = message;
-    errorDiv.classList.add('visible');
-    setTimeout(() => {
-        errorDiv.classList.remove('visible');
-    }, 3000);
+// Show login form
+function showLoginForm() {
+    document.getElementById('register-form').classList.add('hidden');
+    document.getElementById('login-form').classList.remove('hidden');
+    document.getElementById('auth-title').textContent = 'Login';
 }
 
-// Helper function to toggle loading state
-function toggleLoading(buttonId, isLoading) {
-    const button = document.getElementById(buttonId);
-    if (isLoading) {
-        button.disabled = true;
-        button.innerHTML = '<span class="loading"></span> Processing...';
-    } else {
-        button.disabled = false;
-        button.innerHTML = buttonId === 'login-btn' ? 'Login' : 'Register';
-    }
+// Show register form
+function showRegisterForm() {
+    document.getElementById('login-form').classList.add('hidden');
+    document.getElementById('register-form').classList.remove('hidden');
+    document.getElementById('auth-title').textContent = 'Register';
+}
+
+// Show landing section
+function showLanding() {
+    document.getElementById('game-section').classList.add('hidden');
+    document.getElementById('auth-section').classList.add('hidden');
+    document.getElementById('landing-section').classList.remove('hidden');
+    document.body.className = 'theme-neutral';
 }
 
 // Gender selection
@@ -54,6 +79,8 @@ function selectGender(gender) {
         if (btn.dataset.gender === gender) {
             btn.classList.add('selected');
             btn.style.opacity = '1';
+            // Preview theme
+            document.body.className = `theme-${gender}`;
         } else {
             btn.classList.remove('selected');
             btn.style.opacity = '0.5';
@@ -62,8 +89,7 @@ function selectGender(gender) {
 }
 
 // Registration
-async function register(e) {
-    e?.preventDefault();
+async function register() {
     const username = document.getElementById('register-username').value.trim();
     const password = document.getElementById('register-password').value;
 
@@ -73,7 +99,7 @@ async function register(e) {
     }
 
     if (!selectedGender) {
-        showError('register-form', 'Please select a gender');
+        showError('register-form', 'Please select a theme');
         return;
     }
 
@@ -83,8 +109,7 @@ async function register(e) {
         const response = await fetch(`${API_URL}/api/register`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({ username, password, gender: selectedGender })
         });
@@ -106,6 +131,7 @@ async function register(e) {
                 btn.classList.remove('selected');
                 btn.style.opacity = '1';
             });
+            document.body.className = 'theme-neutral';
 
             // Switch to login form after 2 seconds
             setTimeout(() => {
@@ -123,8 +149,7 @@ async function register(e) {
 }
 
 // Login
-async function login(e) {
-    e?.preventDefault();
+async function login() {
     const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
 
@@ -139,8 +164,7 @@ async function login(e) {
         const response = await fetch(`${API_URL}/api/login`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({ username, password })
         });
@@ -177,13 +201,6 @@ function handleLoginSuccess(data) {
     showGameSection();
 }
 
-// Show landing section
-function showLanding() {
-    document.getElementById('game-section').classList.add('hidden');
-    document.getElementById('auth-section').classList.add('hidden');
-    document.getElementById('landing-section').classList.remove('hidden');
-}
-
 // Show game section
 function showGameSection() {
     document.getElementById('landing-section').classList.add('hidden');
@@ -191,7 +208,7 @@ function showGameSection() {
     document.getElementById('game-section').classList.remove('hidden');
     
     // Apply theme based on user's gender
-    applyTheme(currentUser.gender);
+    document.body.className = `theme-${currentUser.gender}`;
     
     // Show typing test by default
     showTypingTest();
@@ -213,27 +230,36 @@ function logout() {
     document.body.className = 'theme-neutral';
 }
 
+// Helper function to show error message
+function showError(formId, message) {
+    const errorDiv = document.querySelector(`#${formId} .error-message`);
+    if (!errorDiv) {
+        const div = document.createElement('div');
+        div.className = 'error-message';
+        document.getElementById(formId).appendChild(div);
+    }
+    errorDiv.textContent = message;
+    errorDiv.classList.add('visible');
+    setTimeout(() => {
+        errorDiv.classList.remove('visible');
+    }, 3000);
+}
+
+// Helper function to toggle loading state
+function toggleLoading(buttonId, isLoading) {
+    const button = document.getElementById(buttonId);
+    if (isLoading) {
+        button.disabled = true;
+        button.innerHTML = '<span class="loading"></span> Processing...';
+    } else {
+        button.disabled = false;
+        button.innerHTML = buttonId === 'login-btn' ? 'Login' : 'Register';
+    }
+}
+
 // Helper function to get auth header
 function getAuthHeader() {
     return {
         'Authorization': `Bearer ${currentUser?.token}`
     };
 }
-
-// Event listeners for navigation
-document.getElementById('get-started')?.addEventListener('click', () => {
-    document.getElementById('landing-section').classList.add('hidden');
-    document.getElementById('auth-section').classList.remove('hidden');
-    showLoginForm();
-});
-
-document.getElementById('show-register')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('login-form').classList.add('hidden');
-    document.getElementById('register-form').classList.remove('hidden');
-});
-
-document.getElementById('show-login')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    showLoginForm();
-}); 
