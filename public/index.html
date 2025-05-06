@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TypeRescue - Typing Test & Dog Rescue Game</title>
+    <title>TypeRescue - Typing Test</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/themes.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
                 <i class="fas fa-keyboard"></i>
                 <h1>TypeRescue</h1>
             </div>
-            <p class="hero-subtitle">Improve your typing skills while rescuing dogs!</p>
+            <p class="hero-subtitle">Improve your typing skills with our interactive typing test!</p>
             <button id="get-started" class="btn-primary">Get Started</button>
         </div>
     </section>
@@ -80,17 +80,8 @@
                 <span>TypeRescue</span>
             </div>
             <div class="nav-links">
-                <button onclick="showTypingTest()" class="nav-btn" data-section="typing-test">
+                <button class="nav-btn active" data-section="typing-test">
                     <i class="fas fa-keyboard"></i> Typing Test
-                </button>
-                <button onclick="showDogRescue()" class="nav-btn" data-section="dog-rescue">
-                    <i class="fas fa-dog"></i> Dog Rescue
-                </button>
-                <button onclick="showLeaderboard()" class="nav-btn" data-section="leaderboard">
-                    <i class="fas fa-trophy"></i> Leaderboard
-                </button>
-                <button onclick="showAbout()" class="nav-btn" data-section="about">
-                    <i class="fas fa-info-circle"></i> About
                 </button>
             </div>
             <div class="user-info">
@@ -134,121 +125,12 @@
                 <div id="text-display" class="text-display"></div>
                 <textarea id="typing-input" placeholder="Start typing when the test begins..." disabled></textarea>
             </div>
-
-            <!-- Dog Rescue Game -->
-            <div id="dog-rescue" class="game-container hidden">
-                <div class="game-header">
-                    <h2><i class="fas fa-dog"></i> Dog Rescue Game</h2>
-                    <button onclick="startDogRescue()" class="start-btn">
-                        <i class="fas fa-play"></i> Start Game
-                    </button>
-                </div>
-                <div class="game-canvas-container">
-                    <canvas id="game-canvas"></canvas>
-                </div>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <i class="fas fa-star"></i>
-                        <span id="score">Score: 0</span>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-paw"></i>
-                        <span id="dogs-rescued">Dogs Rescued: 0</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Leaderboard -->
-            <div id="leaderboard" class="game-container hidden">
-                <div class="game-header">
-                    <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
-                    <div class="leaderboard-controls">
-                        <button onclick="showLeaderboardData('typing')" class="tab-btn active">
-                            <i class="fas fa-keyboard"></i> Typing Test
-                        </button>
-                        <button onclick="showLeaderboardData('dogRescue')" class="tab-btn">
-                            <i class="fas fa-dog"></i> Dog Rescue
-                        </button>
-                    </div>
-                </div>
-                <div class="leaderboard-content">
-                    <table id="leaderboard-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Player</th>
-                                <th>Score</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-body"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- About Section -->
-            <div id="about" class="game-container hidden">
-                <div class="about-content">
-                    <h2><i class="fas fa-info-circle"></i> About TypeRescue</h2>
-                    <p class="about-description">
-                        TypeRescue is an innovative web application that combines typing practice with an engaging dog rescue game.
-                        Our platform helps users improve their typing skills while enjoying a fun and meaningful gaming experience.
-                    </p>
-
-                    <div class="features-section">
-                        <h3><i class="fas fa-star"></i> Key Features</h3>
-                        <ul>
-                            <li><i class="fas fa-check"></i> Customizable typing tests</li>
-                            <li><i class="fas fa-check"></i> Engaging dog rescue game</li>
-                            <li><i class="fas fa-check"></i> Real-time WPM tracking</li>
-                            <li><i class="fas fa-check"></i> Gender-based themes</li>
-                            <li><i class="fas fa-check"></i> Global leaderboards</li>
-                        </ul>
-                    </div>
-
-                    <div class="developers-section">
-                        <h3><i class="fas fa-code"></i> Meet the Developers</h3>
-                        <div class="developer-cards">
-                            <div class="developer-card">
-                                <img src="https://ui-avatars.com/api/?name=Garvit&background=random" alt="Garvit">
-                                <h4>Garvit</h4>
-                                <p>BCA 6th Semester</p>
-                                <p>SSJU Almora</p>
-                                <div class="social-links">
-                                    <a href="#" target="_blank"><i class="fab fa-github"></i></a>
-                                    <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-                                </div>
-                            </div>
-                            <div class="developer-card">
-                                <img src="https://ui-avatars.com/api/?name=Karan&background=random" alt="Karan">
-                                <h4>Karan</h4>
-                                <p>BCA 6th Semester</p>
-                                <p>SSJU Almora</p>
-                                <div class="social-links">
-                                    <a href="#" target="_blank"><i class="fab fa-github"></i></a>
-                                    <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="college-section">
-                        <h3><i class="fas fa-university"></i> Our Institution</h3>
-                        <p>
-                            We are proud students of Soban Singh Jeena University (SSJU), Almora. 
-                            This project was developed as part of our BCA final semester curriculum, 
-                            showcasing our skills in web development and programming.
-                        </p>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
     <!-- Scripts -->
+    <script src="js/themes.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/typing.js"></script>
-    <script src="js/dogRescue.js"></script>
-    <script src="js/leaderboard.js"></script>
-    <script src="js/ui.js"></script>
 </body>
 </html> 

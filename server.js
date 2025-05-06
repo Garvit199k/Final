@@ -4,8 +4,24 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const net = require('net');
 
 const app = express();
+
+// Function to find an available port
+function findAvailablePort(startPort) {
+    return new Promise((resolve, reject) => {
+        const server = net.createServer();
+        server.listen(startPort, () => {
+            const port = server.address().port;
+            server.close(() => resolve(port));
+        });
+        server.on('error', () => {
+            // Port is in use, try the next one
+            resolve(findAvailablePort(startPort + 1));
+        });
+    });
+}
 
 // CORS configuration
 const corsOptions = {
@@ -18,17 +34,18 @@ const corsOptions = {
             'http://localhost:3000',
             'http://127.0.0.1:8080',
             'http://127.0.0.1:3000',
-            'https://final-sage-three.vercel.app'
+            'https://final-6uuw7nhmu-garvits-projects-5a47218e.vercel.app',
+            'https://final-g996ru6wi-garvits-projects-5a47218e.vercel.app'
         ];
         
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        if (allowedOrigins.includes(origin) || !origin) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
         }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
     optionsSuccessStatus: 200
 };
@@ -60,10 +77,6 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // In-memory storage (for development purposes)
 const users = new Map();
-const scores = {
-    typing: [],
-    dogRescue: []
-};
 
 // Routes
 app.post('/api/register', async (req, res) => {
@@ -83,11 +96,7 @@ app.post('/api/register', async (req, res) => {
         users.set(username, {
             username,
             password: hashedPassword,
-            gender,
-            highScores: {
-                typing: [],
-                dogRescue: []
-            }
+            gender
         });
 
         console.log('Registration successful:', username);
@@ -140,63 +149,6 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// Protected routes
-app.post('/api/scores', authenticateToken, (req, res) => {
-    try {
-        const { type, score } = req.body;
-        const username = req.user.username;
-        
-        if (!type || !score) {
-            return res.status(400).json({ error: 'Invalid score data' });
-        }
-
-        const user = users.get(username);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        // Add score to user's history
-        user.highScores[type].push({
-            ...score,
-            timestamp: new Date()
-        });
-
-        // Add to global leaderboard
-        scores[type].push({
-            username,
-            ...score,
-            timestamp: new Date()
-        });
-
-        // Sort and limit leaderboard
-        scores[type].sort((a, b) => {
-            if (type === 'typing') {
-                return b.wpm - a.wpm;
-            }
-            return b.score - a.score;
-        });
-        scores[type] = scores[type].slice(0, 10);
-
-        res.json({ message: 'Score saved successfully' });
-    } catch (error) {
-        console.error('Error saving score:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.get('/api/leaderboard/:type', (req, res) => {
-    try {
-        const { type } = req.params;
-        if (!scores[type]) {
-            return res.status(400).json({ error: 'Invalid leaderboard type' });
-        }
-        res.json(scores[type]);
-    } catch (error) {
-        console.error('Error fetching leaderboard:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
 // Serve static files for any route not matching API routes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -208,8 +160,17 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal server error' });
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-}); 
+// Start server with port fallback
+const startServer = async () => {
+    try {
+        const port = await findAvailablePort(3000);
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    } catch (error) {
+        console.error('Failed to start server:', error);
+        process.exit(1);
+    }
+};
+
+startServer(); 

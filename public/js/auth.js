@@ -5,6 +5,16 @@ const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:300
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if user is already logged in
+    const token = localStorage.getItem('token');
+    if (token) {
+        const gender = localStorage.getItem('gender');
+        const username = localStorage.getItem('username');
+        handleLoginSuccess({ token, gender, username });
+    } else {
+        showLanding();
+    }
+
     // Add form submit handlers
     document.getElementById('login-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -38,17 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('auth-section').classList.remove('hidden');
         showLoginForm();
     });
-    
-    // Check if user is already logged in
-    const token = localStorage.getItem('token');
-    if (token) {
-        const gender = localStorage.getItem('gender');
-        const username = localStorage.getItem('username');
-        handleLoginSuccess({ token, gender, username });
-    } else {
-        showLanding();
-    }
 });
+
+// Show landing section
+function showLanding() {
+    document.getElementById('game-section').classList.add('hidden');
+    document.getElementById('auth-section').classList.add('hidden');
+    document.getElementById('landing-section').classList.remove('hidden');
+    document.body.className = 'theme-neutral';
+}
 
 // Show login form
 function showLoginForm() {
@@ -64,14 +72,6 @@ function showRegisterForm() {
     document.getElementById('auth-title').textContent = 'Register';
 }
 
-// Show landing section
-function showLanding() {
-    document.getElementById('game-section').classList.add('hidden');
-    document.getElementById('auth-section').classList.add('hidden');
-    document.getElementById('landing-section').classList.remove('hidden');
-    document.body.className = 'theme-neutral';
-}
-
 // Gender selection
 function selectGender(gender) {
     selectedGender = gender;
@@ -79,8 +79,8 @@ function selectGender(gender) {
         if (btn.dataset.gender === gender) {
             btn.classList.add('selected');
             btn.style.opacity = '1';
-            // Preview theme
-            document.body.className = `theme-${gender}`;
+            // Preview theme using ThemeManager
+            ThemeManager.previewTheme(gender);
         } else {
             btn.classList.remove('selected');
             btn.style.opacity = '0.5';
@@ -117,6 +117,12 @@ async function register() {
         const data = await response.json();
 
         if (response.ok) {
+            // Remove any existing success message
+            const existingSuccess = document.querySelector('#register-form .success-message');
+            if (existingSuccess) {
+                existingSuccess.remove();
+            }
+
             // Show success message
             const successDiv = document.createElement('div');
             successDiv.className = 'success-message';
@@ -197,6 +203,11 @@ function handleLoginSuccess(data) {
     localStorage.setItem('gender', data.gender);
     localStorage.setItem('username', data.username);
 
+    // Dispatch login event for theme system
+    document.dispatchEvent(new CustomEvent('userLoggedIn', {
+        detail: { gender: data.gender }
+    }));
+
     // Show game section
     showGameSection();
 }
@@ -207,10 +218,10 @@ function showGameSection() {
     document.getElementById('auth-section').classList.add('hidden');
     document.getElementById('game-section').classList.remove('hidden');
     
-    // Apply theme based on user's gender
-    document.body.className = `theme-${currentUser.gender}`;
+    // Apply theme based on user's gender using ThemeManager
+    ThemeManager.applyTheme(currentUser.gender, true);
     
-    // Show typing test by default
+    // Show typing test
     showTypingTest();
     
     // Update username display
@@ -227,21 +238,28 @@ function logout() {
     // Reset UI
     document.getElementById('game-section').classList.add('hidden');
     document.getElementById('landing-section').classList.remove('hidden');
-    document.body.className = 'theme-neutral';
+    
+    // Reset theme to neutral
+    ThemeManager.resetTheme();
 }
 
 // Helper function to show error message
 function showError(formId, message) {
-    const errorDiv = document.querySelector(`#${formId} .error-message`);
-    if (!errorDiv) {
-        const div = document.createElement('div');
-        div.className = 'error-message';
-        document.getElementById(formId).appendChild(div);
+    // Remove any existing error message
+    const existingError = document.querySelector(`#${formId} .error-message`);
+    if (existingError) {
+        existingError.remove();
     }
-    errorDiv.textContent = message;
-    errorDiv.classList.add('visible');
+
+    // Create and add new error message
+    const div = document.createElement('div');
+    div.className = 'error-message';
+    div.textContent = message;
+    document.getElementById(formId).appendChild(div);
+
+    // Auto-hide after 3 seconds
     setTimeout(() => {
-        errorDiv.classList.remove('visible');
+        div.remove();
     }, 3000);
 }
 
