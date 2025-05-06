@@ -3,7 +3,7 @@ let currentUser = null;
 let selectedGender = null;
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
     ? 'http://localhost:3000' 
-    : 'https://your-vercel-url.vercel.app'; // You'll update this after deploying
+    : 'https://type-rescue.vercel.app'; // Updated Vercel URL
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
