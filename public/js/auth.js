@@ -1,7 +1,9 @@
 // Global variables
 let currentUser = null;
 let selectedGender = null;
-const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000/api' 
+    : 'https://final-89vuvrslp-garvits-projects-5a47218e.vercel.app/api';
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -44,9 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Add get started handler
     document.getElementById('get-started').addEventListener('click', () => {
-        document.getElementById('landing-section').classList.add('hidden');
+        // First show auth section
         document.getElementById('auth-section').classList.remove('hidden');
-        showLoginForm();
+        // Then hide landing section after a small delay
+        setTimeout(() => {
+            document.getElementById('landing-section').classList.add('hidden');
+            showLoginForm();
+        }, 100);
     });
 });
 
@@ -56,6 +62,17 @@ function showLanding() {
     document.getElementById('auth-section').classList.add('hidden');
     document.getElementById('landing-section').classList.remove('hidden');
     document.body.className = 'theme-neutral';
+    
+    // Reset forms
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-password').value = '';
+    document.getElementById('register-username').value = '';
+    document.getElementById('register-password').value = '';
+    selectedGender = null;
+    document.querySelectorAll('.gender-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.style.opacity = '1';
+    });
 }
 
 // Show login form
@@ -106,7 +123,7 @@ async function register() {
     toggleLoading('register-btn', true);
 
     try {
-        const response = await fetch(`${API_URL}/api/register`, {
+        const response = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -167,7 +184,7 @@ async function login() {
     toggleLoading('login-btn', true);
 
     try {
-        const response = await fetch(`${API_URL}/api/login`, {
+        const response = await fetch(`${API_URL}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

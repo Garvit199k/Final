@@ -390,6 +390,15 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.section.hidden {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
 }
 
 .feature-grid {
@@ -949,4 +958,17 @@ body {
         flex-direction: column;
         align-items: center;
     }
+}
+
+/* Forms Transitions */
+#login-form, #register-form {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#login-form.hidden, #register-form.hidden {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
 } 
