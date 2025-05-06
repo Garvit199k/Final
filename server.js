@@ -7,6 +7,7 @@ const path = require('path');
 const net = require('net');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Function to find an available port
 function findAvailablePort(startPort) {
@@ -72,84 +73,99 @@ app.use((req, res, next) => {
     next();
 });
 
-// JWT Secret
+// In-memory user storage
+let users = [];
+
+// JWT secret key
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
-// In-memory storage (for development purposes)
-const users = new Map();
-
-// Routes
-app.post('/api/register', async (req, res) => {
-    try {
-        const { username, password, gender } = req.body;
-        console.log('Register attempt:', { username, gender });
-
-        if (!username || !password || !gender) {
-            return res.status(400).json({ error: 'All fields are required' });
-        }
-
-        if (users.has(username)) {
-            return res.status(400).json({ error: 'Username already exists' });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        users.set(username, {
-            username,
-            password: hashedPassword,
-            gender
-        });
-
-        console.log('Registration successful:', username);
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.post('/api/login', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        console.log('Login attempt:', username);
-
-        const user = users.get(username);
-        if (!user) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-
-        const isValidPassword = await bcrypt.compare(password, user.password);
-        if (!isValidPassword) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-
-        const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '24h' });
-        console.log('Login successful:', username);
-        res.json({ token, gender: user.gender });
-    } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Middleware to verify JWT
+// Authentication middleware
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ error: 'Authentication required' });
+        return res.status(401).json({ error: 'Access denied' });
     }
 
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) {
-            return res.status(403).json({ error: 'Invalid or expired token' });
-        }
-        req.user = user;
+    try {
+        const verified = jwt.verify(token, JWT_SECRET);
+        req.user = verified;
         next();
-    });
+    } catch (error) {
+        res.status(401).json({ error: 'Invalid token' });
+    }
 };
 
-// Serve static files for any route not matching API routes
+// Register endpoint
+app.post('/api/register', async (req, res) => {
+    try {
+        const { username, password, gender } = req.body;
+
+        // Validate input
+        if (!username || !password || !gender) {
+            return res.status(400).json({ error: 'Please provide all required fields' });
+        }
+
+        // Check if user exists
+        if (users.find(u => u.username === username)) {
+            return res.status(400).json({ error: 'Username already exists' });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create user
+        const user = {
+            username,
+            password: hashedPassword,
+            gender
+        };
+
+        users.push(user);
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Login endpoint
+app.post('/api/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // Find user
+        const user = users.find(u => u.username === username);
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        // Check password
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        // Generate token
+        const token = jwt.sign(
+            { username: user.username },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({
+            token,
+            gender: user.gender,
+            username: user.username
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Serve static files
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -160,17 +176,37 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal server error' });
 });
 
-// Start server with port fallback
-const startServer = async () => {
+// Start server with retry logic
+const startServer = async (retries = 5) => {
     try {
-        const port = await findAvailablePort(3000);
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
+        await new Promise((resolve, reject) => {
+            const server = app.listen(PORT, () => {
+                console.log(`Server is running on port ${PORT}`);
+                resolve();
+            });
+
+            server.on('error', (error) => {
+                if (error.code === 'EADDRINUSE') {
+                    console.log(`Port ${PORT} is busy, trying port ${PORT + 1}`);
+                    server.close();
+                    app.listen(PORT + 1, () => {
+                        console.log(`Server is running on port ${PORT + 1}`);
+                        resolve();
+                    });
+                } else {
+                    reject(error);
+                }
+            });
         });
     } catch (error) {
-        console.error('Failed to start server:', error);
-        process.exit(1);
+        if (retries > 0 && error.code === 'EADDRINUSE') {
+            await startServer(retries - 1);
+        } else {
+            console.error('Failed to start server:', error);
+            process.exit(1);
+        }
     }
 };
 
+startServer(); 
 startServer(); 

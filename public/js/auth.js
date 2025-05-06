@@ -3,7 +3,7 @@ let currentUser = null;
 let selectedGender = null;
 const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:3000/api' 
-    : 'https://final-89vuvrslp-garvits-projects-5a47218e.vercel.app/api';
+    : '/api';
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,13 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Add get started handler
     document.getElementById('get-started').addEventListener('click', () => {
-        // First show auth section
         document.getElementById('auth-section').classList.remove('hidden');
-        // Then hide landing section after a small delay
-        setTimeout(() => {
-            document.getElementById('landing-section').classList.add('hidden');
-            showLoginForm();
-        }, 100);
+        document.getElementById('landing-section').classList.add('hidden');
+        showLoginForm();
     });
 });
 
@@ -123,7 +119,7 @@ async function register() {
     toggleLoading('register-btn', true);
 
     try {
-        const response = await fetch(`${API_URL}/auth/register`, {
+        const response = await fetch(`${API_URL}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -184,7 +180,7 @@ async function login() {
     toggleLoading('login-btn', true);
 
     try {
-        const response = await fetch(`${API_URL}/auth/login`, {
+        const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -195,7 +191,7 @@ async function login() {
         const data = await response.json();
 
         if (response.ok) {
-            handleLoginSuccess({ ...data, username });
+            handleLoginSuccess(data);
         } else {
             throw new Error(data.error || 'Invalid credentials');
         }
@@ -238,9 +234,6 @@ function showGameSection() {
     // Apply theme based on user's gender using ThemeManager
     ThemeManager.applyTheme(currentUser.gender, true);
     
-    // Show typing test
-    showTypingTest();
-    
     // Update username display
     document.getElementById('username-display').textContent = `Welcome, ${currentUser.username}!`;
 }
@@ -270,13 +263,15 @@ function showError(formId, message) {
 
     // Create and add new error message
     const div = document.createElement('div');
-    div.className = 'error-message';
+    div.className = 'error-message visible';
     div.textContent = message;
     document.getElementById(formId).appendChild(div);
 
     // Auto-hide after 3 seconds
     setTimeout(() => {
-        div.remove();
+        if (div.parentNode) {
+            div.remove();
+        }
     }, 3000);
 }
 
