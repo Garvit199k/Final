@@ -7,8 +7,15 @@ const path = require('path');
 
 const app = express();
 
+// CORS configuration
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    credentials: true
+}));
+
 // Middleware
-app.use(cors()); // Allow all origins during development
 app.use(express.json());
 app.use(express.static('public'));
 

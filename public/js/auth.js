@@ -1,9 +1,7 @@
 // Global variables
 let currentUser = null;
 let selectedGender = null;
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-    ? 'http://localhost:3000' 
-    : 'https://type-rescue.vercel.app'; // Updated Vercel URL
+const API_URL = 'https://final-sage-three.vercel.app';  // Your Vercel deployment URL
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -78,7 +76,12 @@ async function register() {
     toggleLoading('register-btn', true);
 
     try {
-        console.log('Attempting registration...'); // Debug log
+        console.log('Attempting registration...', {
+            url: `${API_URL}/api/register`,
+            username,
+            gender: selectedGender
+        }); // Enhanced debug log
+        
         const response = await fetch(`${API_URL}/api/register`, {
             method: 'POST',
             headers: {
@@ -88,8 +91,14 @@ async function register() {
             body: JSON.stringify({ username, password, gender: selectedGender })
         });
 
-        console.log('Registration response:', response.status); // Debug log
+        console.log('Registration response:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries())
+        }); // Enhanced debug log
+        
         const data = await response.json();
+        console.log('Registration data:', data); // Debug log
 
         if (response.ok) {
             // Show success message
